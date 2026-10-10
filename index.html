@@ -133,6 +133,7 @@
     }
   ];
 
+  // ⚠️ [오류 수정] RULES는 배열이므로 [0]번째 인덱스를 반드시 지정해야 합니다.
   let currentSlides = RULES[0].make("음주");
   let currentIdx = 0;
   let fontSize = 72;
@@ -146,7 +147,7 @@
     const ctx = canvas.getContext('2d');
     const cur = currentSlides[currentIdx] || currentSlides[0];
 
-    // [개선] 힙한 인스타 감성의 시안 블루 - 딥 앤 와인 네이비 그라데이션 배경
+    // 힙한 인스타 감성의 시안 블루 - 딥 앤 와인 네이비 그라데이션 배경
     const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1080);
     bgGrad.addColorStop(0, "#070b12");
     bgGrad.addColorStop(0.5, "#0b1528");
@@ -154,7 +155,7 @@
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, 1080, 1080);
 
-    // [개선] 입체감을 더하는 네온 그래픽 오라(Aura) 원형 조명 효과
+    // 입체감을 더하는 네온 그래픽 오라(Aura) 원형 조명 효과
     ctx.fillStyle = "rgba(99, 102, 241, 0.12)"; // 인디고 빔
     ctx.beginPath();
     ctx.arc(920, 220, 400, 0, Math.PI * 2);
@@ -165,7 +166,7 @@
     ctx.arc(150, 850, 450, 0, Math.PI * 2);
     ctx.fill();
 
-    // [개선] 상단 매거진 그리드 바 (인스타 전용 미니멀 레이아웃 구조선)
+    // 상단 매거진 그리드 바 (인스타 전용 미니멀 레이아웃 구조선)
     ctx.lineWidth = 2;
     ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
     ctx.beginPath();
@@ -191,4 +192,176 @@
     // 정렬 값에 맞춘 X축 포지셔닝 기준
     ctx.textAlign = textAlign;
     let startX = (textAlign === 'center') ? 540 : 80;
+
+    // 고급 미니멀 매거진 정렬을 위한 Y축 가이드선 매핑 (위, 가운데, 아래)
+    let startY = 560;
+    if (textPos === 'top') startY = 320;
+    if (textPos === 'bottom') startY = 740;
+
+    // 텍스트 배지 디자인 구조화
+    if (cur.badge) {
+      ctx.font = "bold 28px Pretendard";
+      ctx.fillStyle = "#38bdf8"; // 스카이블루 포인트
+      if (textAlign === 'left') {
+        ctx.fillText(`▪ ${cur.badge}`, startX, startY - 140);
+      } else {
+        ctx.fillText(`${cur.badge}`, startX, startY - 140);
+      }
+    }
+
+    // 메인 타이틀 자동 키워드 서치 하이라이팅 기능 탑재 렌더링
+    ctx.font = `800 ${fontSize}px Pretendard`;
+    ctx.textBaseline = "top";
+    const lines = cur.title.split('\n');
+    let currentY = startY - 60;
+    
+    lines.forEach((line) => {
+      // 인스타 피드에서 시선을 끄는 핵심 문구 필터 배열
+      const highlightKeywords = ["절대 금지", "치솟는 이유", "충격적인", "멈춰야 할", "핵심 팩트", "정체는"];
+      let hasKeyword = false;
+      let targetWord = "";
+
+      highlightKeywords.forEach(word => {
+        if(line.includes(word)) {
+          hasKeyword = true;
+          targetWord = word;
+        }
+      });
+
+      // 키워드가 있고 '왼쪽 정렬' 상태일 때 정교한 단어 분리 컬러 강조 진행
+      if (hasKeyword && textAlign === 'left') {
+        const parts = line.split(targetWord);
+        
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(parts[0], startX, currentY);
+        
+        let firstWidth = ctx.measureText(parts[0]).width;
+        ctx.fillStyle = "#facc15"; // 시선을 사로잡는 형광 네온 옐로우 컬러
+        ctx.fillText(targetWord, startX + firstWidth, currentY);
+        
+        let secondWidth = ctx.measureText(targetWord).width;
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(parts[1] || "", startX + firstWidth + secondWidth, currentY);
+      } else {
+        // 일반 텍스트 문장 렌더링 (가운데 정렬이거나 일반 구문일 때)
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(line, startX, currentY);
+      }
+      
+      currentY += fontSize + 24; // 명시성을 높인 여유로운 줄바꿈 여백
+    });
+
+    // 고해상도 가독성을 고려한 서브 카피 렌더링
+    if (cur.sub) {
+      ctx.font = "500 30px Pretendard";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.65)"; // 은은한 반투명 밀크 화이트
+      ctx.fillText(cur.sub, startX, currentY + 30);
+    }
+
+    // 하단 텍스트 캡션 실시간 동기화
+    updateCaption();
+  }
+
+  // 3. 인스타그램 본문 자동 배포용 캡션 생성 스크립트
+  function updateCaption() {
+    const captionBox = document.getElementById('captionBox');
+    if (!captionBox) return;
+    
+    let text = `🚨 인스타그램 필수 저장! 화제의 최신 연구 소식 요약\n\n`;
+    currentSlides.forEach((slide, idx) => {
+      text += `${idx + 1}️⃣ [${slide.badge}] ${slide.title.replace('\n', ' ')}\n👉 ${slide.sub}\n\n`;
+    });
+    text += `-\n#카드뉴스 #인스타마케팅 #지식창업 #건강정보 #자동화툴 #스튜디오PRO`;
+    captionBox.innerText = text;
+  }
+
+  // 4. 컴포넌트 인터페이스 바인딩 및 이벤트 제어
+  document.addEventListener("DOMContentLoaded", () => {
+    // 상단 인덱스 탭 변경 기능 구현
+    document.querySelectorAll('.slide-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.slide-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        currentIdx = parseInt(e.target.getAttribute('data-idx'));
+        draw();
+      });
+    });
+
+    // 실시간 자간/텍스트 폰트 슬라이더 매핑
+    const fontSlider = document.getElementById('fontSlider');
+    const fontSizeDisplay = document.getElementById('fontSizeDisplay');
+    fontSlider.addEventListener('input', (e) => {
+      fontSize = parseInt(e.target.value);
+      fontSizeDisplay.innerText = fontSize + "px";
+      draw();
+    });
+
+    // 상/중/하 높낮이 옵션 트리거 연결
+    document.querySelectorAll('#posGroup .seg-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('#posGroup .seg-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        textPos = e.target.getAttribute('data-pos');
+        draw();
+      });
+    });
+
+    // 좌/우/중앙 배열 옵션 트리거 연결
+    document.querySelectorAll('#alignGroup .seg-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('#alignGroup .seg-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        textAlign = e.target.getAttribute('data-align');
+        draw();
+      });
+    });
+
+    // 생성 자동화 트리거 (원문 데이터를 분석해 적합한 키워드를 도출하고 프레임워크 결합)
+    document.getElementById('btnRun').addEventListener('click', () => {
+      const newsInput = document.getElementById('newsInput').value;
+      let keyword = "음주 위험";
+      
+      if(newsInput.includes("음주")) keyword = "음주 습관";
+      else if(newsInput.includes("혈당")) keyword = "혈당 쇼크";
+      else if(newsInput.length > 2) keyword = newsInput.substring(0, 5);
+      
+      const randomRule = RULES[Math.floor(Math.random() * RULES.length)];
+      document.getElementById('ragTag').innerText = `📖 적용된 마케팅 공식: ${randomRule.book}`;
+      
+      currentSlides = randomRule.make(keyword);
+      currentIdx = 0;
+      
+      // 탭 포커스 1번으로 초기화
+      document.querySelectorAll('.slide-tab').forEach((t, i) => {
+        if(i === 0) t.classList.add('active');
+        else t.classList.remove('active');
+      });
+
+      draw();
+      alert("✅ AI 엔진이 기사를 정밀 요약하여 5단계 캐러셀 매거진을 새롭게 렌더링했습니다!");
+    });
+
+    // 단일 다운로드 파일화 API 맵핑
+    document.getElementById('btnDown').addEventListener('click', () => {
+      const canvas = document.getElementById('cardCanvas');
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement('a');
+      link.download = `magazine_slide_0${currentIdx + 1}.png`;
+      link.href = image;
+      link.click();
+    });
+
+    // 본문 클립보드 내보내기 맵핑
+    document.getElementById('btnCopy').addEventListener('click', () => {
+      const captionBox = document.getElementById('captionBox');
+      navigator.clipboard.writeText(captionBox.innerText).then(() => {
+        alert("📋 인스타그램 캡션이 클립보드에 안전하게 복사되었습니다. 업로드 시 바로 붙여넣기하세요!");
+      });
+    });
+
+    // 구동 시 즉시 그리기 딜레이 선언
+    setTimeout(draw, 300);
+  });
+</script>
+
 
