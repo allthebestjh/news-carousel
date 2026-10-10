@@ -3,53 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>5단계 고체류 캐러셀 스튜디오</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <title>5단계 프리미엄 캐러셀 스튜디오</title>
+  <link rel="stylesheet" href="https://jsdelivr.net">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: #0b1120; display: flex; justify-content: center; min-height: 100vh; padding: 14px; color: #f8fafc; }
-    .app-card { width: 100%; max-width: 480px; background: #1e293b; border-radius: 22px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+    body { background: #090d16; display: flex; justify-content: center; min-height: 100vh; padding: 14px; color: #f8fafc; }
+    .app-card { width: 100%; max-width: 480px; background: #151f32; border-radius: 24px; padding: 22px; box-shadow: 0 10px 50px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.05); }
     
-    .app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #334155; padding-bottom: 12px; }
+    .app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; }
     .app-title { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; color: #fff; }
-    .badge { background: #3b82f6; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+    .badge { background: #6366f1; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.5px; }
 
     label { font-size: 13px; font-weight: 700; color: #94a3b8; display: block; margin-top: 14px; margin-bottom: 6px; }
-    input[type="text"], textarea { width: 100%; padding: 12px; border: 1.5px solid #334155; border-radius: 12px; font-size: 14px; outline: none; background: #0f172a; color: #fff; }
-    input[type="text"]:focus, textarea:focus { border-color: #3b82f6; }
+    input[type="text"], textarea { width: 100%; padding: 12px; border: 1.5px solid #2e3e56; border-radius: 12px; font-size: 14px; outline: none; background: #0b111e; color: #fff; transition: all 0.2s; }
+    input[type="text"]:focus, textarea:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
 
-    .btn-run { width: 100%; padding: 16px; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; margin-top: 14px; box-shadow: 0 4px 16px rgba(37,99,235,0.4); display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-run:active { transform: scale(0.98); background: #1d4ed8; }
+    .btn-run { width: 100%; padding: 16px; background: #6366f1; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 14px; box-shadow: 0 4px 16px rgba(99,102,241,0.35); display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+    .btn-run:hover { background: #4f46e5; }
+    .btn-run:active { transform: scale(0.98); }
 
-    .rag-indicator { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 10px; margin-top: 14px; font-size: 12px; color: #38bdf8; display: flex; align-items: center; gap: 6px; }
+    .rag-indicator { background: #0b111e; border: 1px solid #2e3e56; border-radius: 10px; padding: 10px; margin-top: 14px; font-size: 12px; color: #38bdf8; display: flex; align-items: center; gap: 6px; font-weight: 600; }
 
     .slide-tabs { display: flex; gap: 6px; margin-top: 16px; }
-    .slide-tab { flex: 1; padding: 10px 0; background: #334155; border: none; border-radius: 8px; color: #94a3b8; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; }
-    .slide-tab.active { background: #3b82f6; color: #fff; font-weight: 800; }
+    .slide-tab { flex: 1; padding: 10px 0; background: #223147; border: none; border-radius: 8px; color: #94a3b8; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.2s; }
+    .slide-tab.active { background: #6366f1; color: #fff; font-weight: 800; }
 
-    .canvas-wrap { margin-top: 12px; border-radius: 14px; overflow: hidden; border: 1.5px solid #334155; line-height: 0; background: #0b1120; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    .canvas-wrap { margin-top: 12px; border-radius: 16px; overflow: hidden; border: 1.5px solid #2e3e56; line-height: 0; background: #090d16; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
     canvas { width: 100%; height: auto; display: block; }
 
     .ctrl-row { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 12px; font-weight: 700; color: #94a3b8; }
-    .range-slider { width: 100%; height: 6px; -webkit-appearance: none; background: #334155; border-radius: 3px; outline: none; margin-top: 6px; }
-    .range-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #3b82f6; cursor: pointer; }
+    .range-slider { width: 100%; height: 6px; -webkit-appearance: none; background: #223147; border-radius: 3px; outline: none; margin-top: 6px; }
+    .range-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #6366f1; cursor: pointer; transition: background 0.2s; }
+    .range-slider::-webkit-slider-thumb:hover { background: #4f46e5; }
 
-    .seg-group { display: flex; border: 1px solid #334155; border-radius: 8px; overflow: hidden; margin-top: 6px; }
-    .seg-btn { flex: 1; padding: 8px 0; background: #0f172a; border: none; font-size: 12px; font-weight: 600; color: #94a3b8; cursor: pointer; }
-    .seg-btn.active { background: #3b82f6; color: #fff; font-weight: 700; }
+    .seg-group { display: flex; border: 1px solid #2e3e56; border-radius: 8px; overflow: hidden; margin-top: 6px; background: #0b111e; }
+    .seg-btn { flex: 1; padding: 9px 0; background: transparent; border: none; font-size: 12px; font-weight: 600; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .seg-btn.active { background: #6366f1; color: #fff; font-weight: 700; }
 
-    .btn-down { width: 100%; padding: 14px; background: #10b981; color: #fff; border: none; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer; margin-top: 12px; }
-    .btn-copy { width: 100%; padding: 12px; background: #475569; color: #fff; border: none; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+    .btn-down { width: 100%; padding: 14px; background: #10b981; color: #fff; border: none; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer; margin-top: 14px; box-shadow: 0 4px 12px rgba(16,185,129,0.25); transition: background 0.2s; }
+    .btn-down:hover { background: #059669; }
+    .btn-copy { width: 100%; padding: 12px; background: #475569; color: #fff; border: none; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+    .btn-copy:hover { background: #334155; }
     
-    .caption-box { background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 14px; font-size: 13px; line-height: 1.6; color: #cbd5e1; white-space: pre-line; margin-top: 10px; }
+    .caption-box { background: #0b111e; border: 1px solid #2e3e56; border-radius: 12px; padding: 14px; font-size: 13px; line-height: 1.6; color: #cbd5e1; white-space: pre-line; margin-top: 10px; max-height: 150px; overflow-y: auto; }
   </style>
 </head>
 <body>
 
 <div class="app-card">
   <div class="app-header">
-    <div class="app-title">⚡ 5단계 캐러셀 스튜디오</div>
-    <span class="badge">RAG 30 Engine</span>
+    <div class="app-title">✨ 캐러셀 매거진 스튜디오 PRO</div>
+    <span class="badge">RAG 3.0 Engine</span>
   </div>
 
   <label>뉴스 기사 URL 링크 붙여넣기</label>
@@ -82,7 +86,7 @@
     <span>글자 크기</span>
     <span id="fontSizeDisplay">72px</span>
   </div>
-  <input type="range" class="range-slider" id="fontSlider" min="45" max="95" value="72">
+  <input type="range" class="range-slider" id="fontSlider" min="50" max="95" value="72">
 
   <div class="ctrl-row"><span>글자 세로 위치</span></div>
   <div class="seg-group" id="posGroup">
@@ -105,7 +109,7 @@
 </div>
 
 <script>
-  // 1. 순수 데이터 정의
+  // 1. 마케팅 프레임워크 기반 콘텐츠 데이터 정의
   const RULES = [
     {
       book: "로버트 치알디니 《설득의 심리학》 (손실 회피)",
@@ -120,197 +124,71 @@
     {
       book: "칩 히스 《스틱!》 (호기심 공백)",
       make: (topic) => [
-        { badge: "화제 이슈", title: `${topic},\n정체는?`, sub: "SNS를 발칵 뒤집어 놓은 화제의 실물 전격 공개" },
-        { badge: "숨은 비하인드", title: `다들 모르고 지나쳤던\n충격적인 사연`, sub: "단순 해프닝인 줄 알았는데 실제 전시로 이어진 전말" },
-        { badge: "핵심 팩트", title: `꼭 챙겨봐야 할\n관람 포인트 3가지`, sub: "전문가들도 감탄한 유물의 숨겨진 가치와 의미" },
-        { badge: "현장 정보", title: `관람객 성원으로\n특별 공개 확정`, sub: "실제 관람 가능한 장소와 전시 일정 총정리" },
-        { badge: "주말 나들이 🔖", title: `이번 주말 같이 갈 사람?\n@친구태그`, sub: "나중에 찾아보려면 지금 바로 저장(Save)해 두세요!" }
+        { badge: "화제 이슈", title: `${topic},\n정체는 무엇일까?`, sub: "SNS를 발칵 뒤집어 놓은 화제의 실물 전격 공개" },
+        { badge: "숨은 비하인드", title: `다들 모르고 지나쳤던\n충격적인 내막`, sub: "단순 해프닝인 줄 알았는데 실제 연구 결과로 드러난 전말" },
+        { badge: "핵심 팩트", title: `꼭 챙겨봐야 할\n핵심 팩트 3가지`, sub: "전문가들도 감탄한 유물의 숨겨진 가치와 건강상 의미" },
+        { badge: "현장 정보", title: `시청자 성원으로\n특별 요약 확정`, sub: "실제 확인 가능한 관련 정보와 대처 일정 총정리" },
+        { badge: "정보 저장 🔖", title: `나중에 다시 볼 정보\n@친구 태그하기`, sub: "나중에 찾아보려면 지금 바로 저장(Save)해 두세요!" }
       ]
     }
   ];
 
-  let currentSlides = RULES[0].make("술 한 잔");
+  let currentSlides = RULES[0].make("음주");
   let currentIdx = 0;
   let fontSize = 72;
   let textPos = 'bottom';
   let textAlign = 'left';
 
-  // 2. 동기식 즉시 그리기 (외부 의존성 제로)
+  // 2. 프리미엄 매거진 스타일로 구현된 동기식 Canvas 렌더링 함수
   function draw() {
     const canvas = document.getElementById('cardCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const cur = currentSlides[currentIdx] || currentSlides[0];
 
-    // 배경 그라데이션
+    // [개선] 힙한 인스타 감성의 시안 블루 - 딥 앤 와인 네이비 그라데이션 배경
     const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1080);
-    bgGrad.addColorStop(0, "#1e293b");
-    bgGrad.addColorStop(1, "#0b1120");
+    bgGrad.addColorStop(0, "#070b12");
+    bgGrad.addColorStop(0.5, "#0b1528");
+    bgGrad.addColorStop(1, "#160f22");
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, 1080, 1080);
 
-    // 은은한 포인트 조명 원
-    ctx.fillStyle = "rgba(37, 99, 235, 0.15)";
+    // [개선] 입체감을 더하는 네온 그래픽 오라(Aura) 원형 조명 효과
+    ctx.fillStyle = "rgba(99, 102, 241, 0.12)"; // 인디고 빔
     ctx.beginPath();
-    ctx.arc(540, 360, 340, 0, Math.PI * 2);
+    ctx.arc(920, 220, 400, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.fillStyle = "rgba(236, 72, 153, 0.07)"; // 핑크 네온 빔
+    ctx.beginPath();
+    ctx.arc(150, 850, 450, 0, Math.PI * 2);
     ctx.fill();
 
-    // 하단 45% 딤드 그라데이션
-    const grad = ctx.createLinearGradient(0, 480, 0, 1080);
-    grad.addColorStop(0, "rgba(11, 17, 32, 0)");
-    grad.addColorStop(0.5, "rgba(11, 17, 32, 0.75)");
-    grad.addColorStop(1, "rgba(11, 17, 32, 0.98)");
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 480, 1080, 600);
-
-    // 상단 인디케이터
-    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-    ctx.font = "bold 26px sans-serif";
-    ctx.textAlign = "right";
-    ctx.fillText((currentIdx + 1) + " / 5", 1000, 90);
-
-    // 카테고리 뱃지 박스
-    ctx.fillStyle = "rgba(59, 130, 246, 0.35)";
-    ctx.fillRect(80, 620, 200, 48);
-    ctx.strokeStyle = "rgba(59, 130, 246, 0.9)";
+    // [개선] 상단 매거진 그리드 바 (인스타 전용 미니멀 레이아웃 구조선)
     ctx.lineWidth = 2;
-    ctx.strokeRect(80, 620, 200, 48);
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+    ctx.beginPath();
+    ctx.moveTo(80, 140);
+    ctx.lineTo(1000, 140);
+    ctx.stroke();
 
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 22px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText(cur.badge, 180, 652);
+    // 상단 채널 식별자 로고
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
+    ctx.font = "bold 24px Pretendard";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.fillText("INSIGHT.STUDIO", 80, 105);
 
-    // 메인 헤드라인
+    // 상단 카드 장수 표시 인디케이터 (ex. 01 / 05)
+    ctx.textAlign = "right";
+    ctx.font = "800 26px Pretendard";
+    ctx.fillStyle = "#6366f1"; // 메인 트렌디 인디고 컬러
+    ctx.fillText(`0${currentIdx + 1}`, 960, 105);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+    ctx.fillText(` / 05`, 1000, 105);
+
+    // 정렬 값에 맞춘 X축 포지셔닝 기준
     ctx.textAlign = textAlign;
-    ctx.font = "900 " + fontSize + "px sans-serif";
-    ctx.shadowColor = "rgba(0,0,0,0.9)";
-    ctx.shadowBlur = 18;
+    let startX = (textAlign === 'center') ? 540 : 80;
 
-    let posX = textAlign === 'center' ? 540 : 80;
-    let lineHeight = fontSize * 1.25;
-    let startY = textPos === 'top' ? 240 : (textPos === 'center' ? 520 : 750);
-
-    const lines = cur.title.split('\n');
-    for (let i = 0; i < lines.length; i++) {
-      ctx.fillStyle = (i === lines.length - 1) ? "#FFDF38" : "#FFFFFF";
-      ctx.fillText(lines[i], posX, startY + (i * lineHeight));
-    }
-
-    // 서브 설명문
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = "#94A3B8";
-    ctx.font = "500 28px sans-serif";
-    ctx.fillText(cur.sub, posX, startY + (lines.length * lineHeight) + 24);
-  }
-
-  // 3. 기사 분석 및 슬라이드 업데이트
-  async function generate() {
-    const url = document.getElementById('urlInput').value.trim();
-    let text = document.getElementById('newsInput').value.trim();
-
-    if (url) {
-      document.getElementById('ragTag').innerText = "⏳ 링크 분석 중...";
-      try {
-        const res = await fetch("https://r.jina.ai/" + url);
-        if (res.ok) {
-          const fetched = await res.text();
-          text = fetched.substring(0, 500);
-          document.getElementById('newsInput').value = text;
-        }
-      } catch (e) {
-        console.warn("URL 페치 실패, 본문 사용", e);
-      }
-    }
-
-    let rule = RULES[1];
-    let topic = "화제의 이슈";
-    if (text.includes("당뇨") || text.includes("대장암") || text.includes("알코올") || text.includes("술") || text.includes("혈당") || text.includes("건강")) {
-      rule = RULES[0];
-      topic = text.includes("술") ? "술 한 잔" : "건강 경고";
-    } else if (text.includes("잉어") || text.includes("유물") || text.includes("박물관")) {
-      topic = "사람 된 잉어";
-    }
-
-    document.getElementById('ragTag').innerText = "📖 적용된 마케팅 공식: " + rule.book;
-    currentSlides = rule.make(topic);
-    draw();
-    updateCaption();
-  }
-
-  function updateCaption() {
-    const text = document.getElementById('newsInput').value.substring(0, 90);
-    const caption = "[전문가 경고 팩트 체크] ⚠️\n\n\"" + text + "...\"\n\n1장부터 5장까지 넘겨보시면서 건강 지키세요!\n👉 1번: 오늘부터 당장 술 끊는다\n👉 2번: 그래도 회식 땐 어쩔 수 없다\n\n댓글로 여러분의 생각을 남겨주세요!\n\n#카드뉴스 #건강정보 #혈당관리 #대장암예방 #생활상식";
-    document.getElementById('captionBox').innerText = caption;
-  }
-
-  // 4. 이벤트 리스너 바인딩 (안정성 보장)
-  document.addEventListener("DOMContentLoaded", function() {
-    // 즉시 최초 렌더링
-    draw();
-    updateCaption();
-
-    // 실행 버튼
-    document.getElementById('btnRun').addEventListener('click', generate);
-
-    // 슬라이드 탭
-    document.querySelectorAll('.slide-tab').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.slide-tab').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentIdx = parseInt(btn.getAttribute('data-idx'));
-        draw();
-      });
-    });
-
-    // 폰트 슬라이더
-    document.getElementById('fontSlider').addEventListener('input', function(e) {
-      fontSize = parseInt(e.target.value);
-      document.getElementById('fontSizeDisplay').innerText = fontSize + 'px';
-      draw();
-    });
-
-    // 위치 버튼
-    document.querySelectorAll('#posGroup .seg-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('#posGroup .seg-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        textPos = btn.getAttribute('data-pos');
-        draw();
-      });
-    });
-
-    // 정렬 버튼
-    document.querySelectorAll('#alignGroup .seg-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('#alignGroup .seg-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        textAlign = btn.getAttribute('data-align');
-        draw();
-      });
-    });
-
-    // 다운로드
-    document.getElementById('btnDown').addEventListener('click', function() {
-      const canvas = document.getElementById('cardCanvas');
-      const link = document.createElement('a');
-      link.download = 'slide_' + (currentIdx + 1) + '.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    });
-
-    // 복사
-    document.getElementById('btnCopy').addEventListener('click', function() {
-      navigator.clipboard.writeText(document.getElementById('captionBox').innerText).then(function() {
-        alert("본문이 복사되었습니다!");
-      });
-    });
-  });
-
-  // 백업 실행 (DOM 로드 후 누락 방지)
-  window.onload = function() {
-    draw();
-  };
-</script>
-</body>
-</html>
