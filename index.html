@@ -19,7 +19,7 @@
     input[type="text"]:focus, textarea:focus { border-color: #3b82f6; }
 
     .btn-run { width: 100%; padding: 16px; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; margin-top: 14px; box-shadow: 0 4px 16px rgba(37,99,235,0.4); display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-run:hover { background: #1d4ed8; }
+    .btn-run:active { transform: scale(0.98); background: #1d4ed8; }
 
     .rag-indicator { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 10px; margin-top: 14px; font-size: 12px; color: #38bdf8; display: flex; align-items: center; gap: 6px; }
 
@@ -27,7 +27,7 @@
     .slide-tab { flex: 1; padding: 10px 0; background: #334155; border: none; border-radius: 8px; color: #94a3b8; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; }
     .slide-tab.active { background: #3b82f6; color: #fff; font-weight: 800; }
 
-    .canvas-wrap { margin-top: 12px; border-radius: 14px; overflow: hidden; border: 1.5px solid #334155; line-height: 0; background: #000; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    .canvas-wrap { margin-top: 12px; border-radius: 14px; overflow: hidden; border: 1.5px solid #334155; line-height: 0; background: #0b1120; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
     canvas { width: 100%; height: auto; display: block; }
 
     .ctrl-row { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 12px; font-weight: 700; color: #94a3b8; }
@@ -53,12 +53,12 @@
   </div>
 
   <label>뉴스 기사 URL 링크 붙여넣기</label>
-  <input type="text" id="urlInput" placeholder="https://www.yna.co.kr/view/... 뉴스 링크를 넣으세요">
+  <input type="text" id="urlInput" placeholder="https://... 뉴스 링크">
 
   <label>또는 기사 내용 직접 붙여넣기</label>
   <textarea id="newsInput" rows="3">혈당 대사에 이상이 있거나 당뇨병이 있는 사람에게서 음주 시 대장암 위험이 급격히 증가한다는 연구 결과가 나왔습니다. 전문가들은 알코올 섭취를 최소화하는 것이 안전하다고 경고했습니다.</textarea>
 
-  <button class="btn-run" onclick="handleGenerate()">
+  <button type="button" class="btn-run" id="btnRun">
     <span>⚡ 1초 완성: 기사 분석 & 5단계 카드뉴스 생성</span>
   </button>
 
@@ -67,11 +67,11 @@
   </div>
 
   <div class="slide-tabs">
-    <button class="slide-tab active" onclick="switchSlide(0, this)">1. 후킹</button>
-    <button class="slide-tab" onclick="switchSlide(1, this)">2. 문제</button>
-    <button class="slide-tab" onclick="switchSlide(2, this)">3. 해결</button>
-    <button class="slide-tab" onclick="switchSlide(3, this)">4. 증명</button>
-    <button class="slide-tab" onclick="switchSlide(4, this)">5. CTA</button>
+    <button type="button" class="slide-tab active" data-idx="0">1. 후킹</button>
+    <button type="button" class="slide-tab" data-idx="1">2. 문제</button>
+    <button type="button" class="slide-tab" data-idx="2">3. 해결</button>
+    <button type="button" class="slide-tab" data-idx="3">4. 증명</button>
+    <button type="button" class="slide-tab" data-idx="4">5. CTA</button>
   </div>
 
   <div class="canvas-wrap">
@@ -80,37 +80,36 @@
 
   <div class="ctrl-row">
     <span>글자 크기</span>
-    <span id="fontSizeDisplay">74px</span>
+    <span id="fontSizeDisplay">72px</span>
   </div>
-  <input type="range" class="range-slider" min="45" max="95" value="74" oninput="changeFontSize(this.value)">
+  <input type="range" class="range-slider" id="fontSlider" min="45" max="95" value="72">
 
   <div class="ctrl-row"><span>글자 세로 위치</span></div>
-  <div class="seg-group">
-    <button class="seg-btn" onclick="setPos('top', this)">위</button>
-    <button class="seg-btn" onclick="setPos('center', this)">가운데</button>
-    <button class="seg-btn active" onclick="setPos('bottom', this)">아래</button>
+  <div class="seg-group" id="posGroup">
+    <button type="button" class="seg-btn" data-pos="top">위</button>
+    <button type="button" class="seg-btn" data-pos="center">가운데</button>
+    <button type="button" class="seg-btn active" data-pos="bottom">아래</button>
   </div>
 
   <div class="ctrl-row"><span>정렬</span></div>
-  <div class="seg-group">
-    <button class="seg-btn active" onclick="setAlign('left', this)">왼쪽</button>
-    <button class="seg-btn" onclick="setAlign('center', this)">가운데</button>
+  <div class="seg-group" id="alignGroup">
+    <button type="button" class="seg-btn active" data-align="left">왼쪽</button>
+    <button type="button" class="seg-btn" data-align="center">가운데</button>
   </div>
 
-  <button class="btn-down" onclick="downloadCurrentSlide()">💾 현재 슬라이드 이미지 저장</button>
+  <button type="button" class="btn-down" id="btnDown">💾 현재 슬라이드 이미지 저장</button>
 
   <label style="margin-top:20px;">인스타그램 본문 캡션</label>
   <div id="captionBox" class="caption-box"></div>
-  <button class="btn-copy" onclick="copyCaption()">📋 본문 전체 복사</button>
+  <button type="button" class="btn-copy" id="btnCopy">📋 본문 전체 복사</button>
 </div>
 
 <script>
-  // 30대 공식 룰셋
-  const MARKETING_RULES = [
+  // 1. 순수 데이터 정의
+  const RULES = [
     {
-      category: "건강/위험",
       book: "로버트 치알디니 《설득의 심리학》 (손실 회피)",
-      makeSlides: (topic) => [
+      make: (topic) => [
         { badge: "건강 경고", title: `당뇨·혈당 있다면\n${topic} 절대 금지`, sub: "의학계가 경고하는 충격적인 연구 결과 전격 발표" },
         { badge: "핵심 원인", title: `술 한 잔에 대장암 위험\n급격히 치솟는 이유`, sub: "혈당 대사 이상자가 알코올을 섭취했을 때 벌어지는 체내 반응" },
         { badge: "전문가 진단", title: `알코올과 혈당의 악순환\n3가지 핵심 팩트`, sub: "정상인 대비 발병 확률 대폭 증가, 반드시 알아야 할 메커니즘" },
@@ -119,9 +118,8 @@
       ]
     },
     {
-      category: "문화/호기심",
       book: "칩 히스 《스틱!》 (호기심 공백)",
-      makeSlides: (topic) => [
+      make: (topic) => [
         { badge: "화제 이슈", title: `${topic},\n정체는?`, sub: "SNS를 발칵 뒤집어 놓은 화제의 실물 전격 공개" },
         { badge: "숨은 비하인드", title: `다들 모르고 지나쳤던\n충격적인 사연`, sub: "단순 해프닝인 줄 알았는데 실제 전시로 이어진 전말" },
         { badge: "핵심 팩트", title: `꼭 챙겨봐야 할\n관람 포인트 3가지`, sub: "전문가들도 감탄한 유물의 숨겨진 가치와 의미" },
@@ -131,68 +129,33 @@
     }
   ];
 
-  let currentSlides = MARKETING_RULES[0].makeSlides("술 한 잔");
-  let currentSlideIndex = 0;
-  let currentFontSize = 74;
-  let currentPos = 'bottom';
-  let currentAlign = 'left';
-  let hasCustomImage = false;
-  let bgImgElement = null;
+  let currentSlides = RULES[0].make("술 한 잔");
+  let currentIdx = 0;
+  let fontSize = 72;
+  let textPos = 'bottom';
+  let textAlign = 'left';
 
-  async function handleGenerate() {
-    const url = document.getElementById('urlInput').value.trim();
-    let text = document.getElementById('newsInput').value.trim();
-
-    if (url) {
-      document.getElementById('ragTag').innerText = "⏳ 기사 링크에서 원문을 분석하고 있습니다...";
-      try {
-        const res = await fetch(`https://r.jina.ai/${url}`);
-        if (res.ok) {
-          const fetchedText = await res.text();
-          text = fetchedText.substring(0, 500);
-          document.getElementById('newsInput').value = text;
-        }
-      } catch (e) {
-        console.warn("URL 직접 로드 실패, 본문 텍스트로 즉시 생성합니다.");
-      }
-    }
-    runMarketingRAG(text);
-  }
-
-  function runMarketingRAG(text) {
-    let matchedRule = MARKETING_RULES[1];
-    let topic = "화제의 소식";
-
-    if (text.includes("당뇨") || text.includes("대장암") || text.includes("알코올") || text.includes("술") || text.includes("혈당") || text.includes("위험")) {
-      matchedRule = MARKETING_RULES[0];
-      topic = text.includes("술") || text.includes("음주") ? "술 한 잔" : "건강 경고";
-    } else {
-      topic = text.includes("잉어") ? "사람 된 잉어" : "화제의 이슈";
-    }
-
-    document.getElementById('ragTag').innerText = `📖 적용된 마케팅 공식: ${matchedRule.book}`;
-    currentSlides = matchedRule.makeSlides(topic);
-    drawCanvas();
-    updateCaption();
-  }
-
-  function drawCanvas() {
+  // 2. 동기식 즉시 그리기 (외부 의존성 제로)
+  function draw() {
     const canvas = document.getElementById('cardCanvas');
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const slide = currentSlides[currentSlideIndex];
+    const cur = currentSlides[currentIdx] || currentSlides[0];
 
-    // 1. 기본 배경 렌더링 (이미지가 없거나 깨져도 절대 검은 화면이 되지 않도록 다크 그라데이션 보장)
-    if (hasCustomImage && bgImgElement) {
-      try {
-        ctx.drawImage(bgImgElement, 0, 0, 1080, 1080);
-      } catch(e) {
-        fillFallbackBg(ctx);
-      }
-    } else {
-      fillFallbackBg(ctx);
-    }
+    // 배경 그라데이션
+    const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1080);
+    bgGrad.addColorStop(0, "#1e293b");
+    bgGrad.addColorStop(1, "#0b1120");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 1080, 1080);
 
-    // 2. 하단 45% 암전 다크 그라데이션
+    // 은은한 포인트 조명 원
+    ctx.fillStyle = "rgba(37, 99, 235, 0.15)";
+    ctx.beginPath();
+    ctx.arc(540, 360, 340, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 하단 45% 딤드 그라데이션
     const grad = ctx.createLinearGradient(0, 480, 0, 1080);
     grad.addColorStop(0, "rgba(11, 17, 32, 0)");
     grad.addColorStop(0.5, "rgba(11, 17, 32, 0.75)");
@@ -200,117 +163,153 @@
     ctx.fillStyle = grad;
     ctx.fillRect(0, 480, 1080, 600);
 
-    // 3. 상단 페이지 번호 (1/5)
+    // 상단 인디케이터
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-    ctx.font = "bold 26px Pretendard";
+    ctx.font = "bold 26px sans-serif";
     ctx.textAlign = "right";
-    ctx.fillText(`${currentSlideIndex + 1} / 5`, 1000, 90);
+    ctx.fillText((currentIdx + 1) + " / 5", 1000, 90);
 
-    // 4. 카테고리 뱃지 박스 (호환성 보장)
-    drawBadge(ctx, 80, 620, slide.badge);
+    // 카테고리 뱃지 박스
+    ctx.fillStyle = "rgba(59, 130, 246, 0.35)";
+    ctx.fillRect(80, 620, 200, 48);
+    ctx.strokeStyle = "rgba(59, 130, 246, 0.9)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(80, 620, 200, 48);
 
-    // 5. 메인 헤드라인
-    ctx.textAlign = currentAlign;
-    ctx.font = `900 ${currentFontSize}px Pretendard`;
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 22px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(cur.badge, 180, 652);
+
+    // 메인 헤드라인
+    ctx.textAlign = textAlign;
+    ctx.font = "900 " + fontSize + "px sans-serif";
     ctx.shadowColor = "rgba(0,0,0,0.9)";
     ctx.shadowBlur = 18;
 
-    let posX = currentAlign === 'center' ? 540 : 80;
-    let lineHeight = currentFontSize * 1.25;
-    let startY = currentPos === 'top' ? 240 : (currentPos === 'center' ? 520 : 750);
+    let posX = textAlign === 'center' ? 540 : 80;
+    let lineHeight = fontSize * 1.25;
+    let startY = textPos === 'top' ? 240 : (textPos === 'center' ? 520 : 750);
 
-    const lines = slide.title.split('\n');
-    lines.forEach((line, i) => {
+    const lines = cur.title.split('\n');
+    for (let i = 0; i < lines.length; i++) {
       ctx.fillStyle = (i === lines.length - 1) ? "#FFDF38" : "#FFFFFF";
-      ctx.fillText(line, posX, startY + (i * lineHeight));
-    });
+      ctx.fillText(lines[i], posX, startY + (i * lineHeight));
+    }
 
-    // 6. 서브 설명문
+    // 서브 설명문
     ctx.shadowBlur = 0;
     ctx.fillStyle = "#94A3B8";
-    ctx.font = "500 28px Pretendard";
-    ctx.fillText(slide.sub, posX, startY + (lines.length * lineHeight) + 24);
+    ctx.font = "500 28px sans-serif";
+    ctx.fillText(cur.sub, posX, startY + (lines.length * lineHeight) + 24);
   }
 
-  function fillFallbackBg(ctx) {
-    const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1080);
-    bgGrad.addColorStop(0, "#1e293b");
-    bgGrad.addColorStop(1, "#0f172a");
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, 1080, 1080);
-    
-    // 은은한 배경 원형 조명 효과
-    ctx.fillStyle = "rgba(37, 99, 235, 0.12)";
-    ctx.beginPath();
-    ctx.arc(540, 380, 320, 0, Math.PI * 2);
-    ctx.fill();
-  }
+  // 3. 기사 분석 및 슬라이드 업데이트
+  async function generate() {
+    const url = document.getElementById('urlInput').value.trim();
+    let text = document.getElementById('newsInput').value.trim();
 
-  function drawBadge(ctx, x, y, text) {
-    ctx.save();
-    ctx.fillStyle = "rgba(59, 130, 246, 0.3)";
-    ctx.strokeStyle = "rgba(59, 130, 246, 0.8)";
-    ctx.lineWidth = 2;
-    // 사각형 뱃지
-    ctx.fillRect(x, y, 190, 48);
-    ctx.strokeRect(x, y, 190, 48);
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 22px Pretendard";
-    ctx.textAlign = "center";
-    ctx.fillText(text, x + 95, y + 32);
-    ctx.restore();
-  }
+    if (url) {
+      document.getElementById('ragTag').innerText = "⏳ 링크 분석 중...";
+      try {
+        const res = await fetch("https://r.jina.ai/" + url);
+        if (res.ok) {
+          const fetched = await res.text();
+          text = fetched.substring(0, 500);
+          document.getElementById('newsInput').value = text;
+        }
+      } catch (e) {
+        console.warn("URL 페치 실패, 본문 사용", e);
+      }
+    }
 
-  function switchSlide(idx, btn) {
-    document.querySelectorAll('.slide-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentSlideIndex = idx;
-    drawCanvas();
-  }
+    let rule = RULES[1];
+    let topic = "화제의 이슈";
+    if (text.includes("당뇨") || text.includes("대장암") || text.includes("알코올") || text.includes("술") || text.includes("혈당") || text.includes("건강")) {
+      rule = RULES[0];
+      topic = text.includes("술") ? "술 한 잔" : "건강 경고";
+    } else if (text.includes("잉어") || text.includes("유물") || text.includes("박물관")) {
+      topic = "사람 된 잉어";
+    }
 
-  function changeFontSize(v) {
-    currentFontSize = parseInt(v);
-    document.getElementById('fontSizeDisplay').innerText = v + 'px';
-    drawCanvas();
-  }
-  function setPos(p, btn) {
-    btn.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentPos = p;
-    drawCanvas();
-  }
-  function setAlign(a, btn) {
-    btn.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentAlign = a;
-    drawCanvas();
+    document.getElementById('ragTag').innerText = "📖 적용된 마케팅 공식: " + rule.book;
+    currentSlides = rule.make(topic);
+    draw();
+    updateCaption();
   }
 
   function updateCaption() {
-    const text = document.getElementById('newsInput').value.substring(0, 100);
-    const caption = `[전문가 경고 팩트 체크] ⚠️\n\n"${text}..."\n\n1장부터 5장까지 넘겨보시면서 건강 지키세요!\n👉 1번: 오늘부터 당장 술 끊는다\n👉 2번: 그래도 회식 땐 어쩔 수 없다\n\n댓글로 여러분의 생각을 남겨주세요!\n\n#카드뉴스 #건강정보 #혈당관리 #대장암예방 #생활상식`;
+    const text = document.getElementById('newsInput').value.substring(0, 90);
+    const caption = "[전문가 경고 팩트 체크] ⚠️\n\n\"" + text + "...\"\n\n1장부터 5장까지 넘겨보시면서 건강 지키세요!\n👉 1번: 오늘부터 당장 술 끊는다\n👉 2번: 그래도 회식 땐 어쩔 수 없다\n\n댓글로 여러분의 생각을 남겨주세요!\n\n#카드뉴스 #건강정보 #혈당관리 #대장암예방 #생활상식";
     document.getElementById('captionBox').innerText = caption;
   }
 
-  function downloadCurrentSlide() {
-    const canvas = document.getElementById('cardCanvas');
-    const link = document.createElement('a');
-    link.download = `slide_${currentSlideIndex + 1}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  }
+  // 4. 이벤트 리스너 바인딩 (안정성 보장)
+  document.addEventListener("DOMContentLoaded", function() {
+    // 즉시 최초 렌더링
+    draw();
+    updateCaption();
 
-  function copyCaption() {
-    navigator.clipboard.writeText(document.getElementById('captionBox').innerText);
-    alert("인스타그램 본문이 복사되었습니다!");
-  }
+    // 실행 버튼
+    document.getElementById('btnRun').addEventListener('click', generate);
 
-  // 초기 시작 시 텍스트 폰트 로딩 대기 후 즉시 렌더링
-  window.onload = () => {
-    document.fonts.ready.then(() => {
-      drawCanvas();
-      updateCaption();
+    // 슬라이드 탭
+    document.querySelectorAll('.slide-tab').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.slide-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentIdx = parseInt(btn.getAttribute('data-idx'));
+        draw();
+      });
     });
+
+    // 폰트 슬라이더
+    document.getElementById('fontSlider').addEventListener('input', function(e) {
+      fontSize = parseInt(e.target.value);
+      document.getElementById('fontSizeDisplay').innerText = fontSize + 'px';
+      draw();
+    });
+
+    // 위치 버튼
+    document.querySelectorAll('#posGroup .seg-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#posGroup .seg-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        textPos = btn.getAttribute('data-pos');
+        draw();
+      });
+    });
+
+    // 정렬 버튼
+    document.querySelectorAll('#alignGroup .seg-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#alignGroup .seg-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        textAlign = btn.getAttribute('data-align');
+        draw();
+      });
+    });
+
+    // 다운로드
+    document.getElementById('btnDown').addEventListener('click', function() {
+      const canvas = document.getElementById('cardCanvas');
+      const link = document.createElement('a');
+      link.download = 'slide_' + (currentIdx + 1) + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+
+    // 복사
+    document.getElementById('btnCopy').addEventListener('click', function() {
+      navigator.clipboard.writeText(document.getElementById('captionBox').innerText).then(function() {
+        alert("본문이 복사되었습니다!");
+      });
+    });
+  });
+
+  // 백업 실행 (DOM 로드 후 누락 방지)
+  window.onload = function() {
+    draw();
   };
 </script>
 </body>
