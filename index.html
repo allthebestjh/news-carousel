@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>5단계 프리미엄 캐러셀 스튜디오</title>
-  <link rel="stylesheet" href="https://jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: #090d16; display: flex; justify-content: center; min-height: 100vh; padding: 14px; color: #f8fafc; }
@@ -174,12 +174,12 @@
     // 상단 텍스트 요소들
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
-    ctx.font = "bold 24px Pretendard";
+    ctx.font = "bold 24px Pretendard, sans-serif";
     ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
     ctx.fillText("INSIGHT.STUDIO", 80, 105);
 
     ctx.textAlign = "right";
-    ctx.font = "800 26px Pretendard";
+    ctx.font = "800 26px Pretendard, sans-serif";
     ctx.fillStyle = "#6366f1";
     ctx.fillText(`0${currentIdx + 1}`, 960, 105);
     ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
@@ -193,123 +193,140 @@
     if (textPos === 'bottom') startY = 740;
 
     if (cur.badge) {
-      ctx.font = "bold 28px Pretendard";
+      ctx.font = "bold 28px Pretendard, sans-serif";
       ctx.fillStyle = "#38bdf8";
       if (textAlign === 'left') {
-        ctx.fillText(▪ ${cur.badge}, startX, startY - 140);
-} else {
-ctx.fillText(${cur.badge}, startX, startY - 140);
-}
-}
-ctx.font = 800 ${fontSize}px Pretendard;
-ctx.textBaseline = "top";
-const lines = cur.title.split('\n');
-let currentY = startY - 60;
-lines.forEach((line) => {
-const highlightKeywords = ["절대 금지", "치솟는 이유", "충격적인", "멈춰야 할", "핵심 팩트", "정체는"];
-let hasKeyword = false;
-let targetWord = "";
-highlightKeywords.forEach(word => {
-if(line.includes(word)) {
-hasKeyword = true;
-targetWord = word;
-}
-});
-if (hasKeyword && textAlign === 'left') {
-const parts = line.split(targetWord);
-ctx.fillStyle = "#ffffff";
-ctx.fillText(parts[0], startX, currentY);
-let firstWidth = ctx.measureText(parts[0]).width;
-ctx.fillStyle = "#facc15";
-ctx.fillText(targetWord, startX + firstWidth, currentY);
-let secondWidth = ctx.measureText(targetWord).width;
-ctx.fillStyle = "#ffffff";
-ctx.fillText(parts[1] || "", startX + firstWidth + secondWidth, currentY);
-} else {
-ctx.fillStyle = "#ffffff";
-ctx.fillText(line, startX, currentY);
-}
-currentY += fontSize + 24;
-});
-if (cur.sub) {
-ctx.font = "500 30px Pretendard";
-ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
-ctx.fillText(cur.sub, startX, currentY + 30);
-}
-updateCaption();
-}
-function updateCaption() {
-const captionBox = document.getElementById('captionBox');
-if (!captionBox) return;
-let text = 🚨 인스타그램 필수 저장! 화제의 최신 연구 소식 요약\n\n;
-currentSlides.forEach((slide, idx) => {
-text += ${idx + 1}️⃣ [${slide.badge}] ${slide.title.replace('\n', ' ')}\n👉 ${slide.sub}\n\n;
-});
-text += -\n#카드뉴스 #인스타마케팅 #지식창업 #건강정보 #자동화툴 #스튜디오PRO;
-captionBox.innerText = text;
-}
-document.addEventListener("DOMContentLoaded", () => {
-document.querySelectorAll('.slide-tab').forEach(tab => {
-tab.addEventListener('click', (e) => {
-document.querySelectorAll('.slide-tab').forEach(t => t.classList.remove('active'));
-e.target.classList.add('active');
-currentIdx = parseInt(e.target.getAttribute('data-idx'));
-draw();
-});
-});
-const fontSlider = document.getElementById('fontSlider');
-const fontSizeDisplay = document.getElementById('fontSizeDisplay');
-fontSlider.addEventListener('input', (e) => {
-fontSize = parseInt(e.target.value);
-fontSizeDisplay.innerText = fontSize + "px";
-draw();
-});
-document.querySelectorAll('#posGroup .seg-btn').forEach(btn => {
-btn.addEventListener('click', (e) => {
-document.querySelectorAll('#posGroup .seg-btn').forEach(b => b.classList.remove('active'));
-e.target.classList.add('active');
-textPos = e.target.getAttribute('data-pos');
-draw();
-});
-});
-document.querySelectorAll('#alignGroup .seg-btn').forEach(btn => {
-btn.addEventListener('click', (e) => {
-document.querySelectorAll('#alignGroup .seg-btn').forEach(b => b.classList.remove('active'));
-e.target.classList.add('active');
-textAlign = e.target.getAttribute('data-align');
-draw();
-});
-});
-document.getElementById('btnRun').addEventListener('click', () => {
-const newsInput = document.getElementById('newsInput').value;
-let keyword = "음주 위험";
-if(newsInput.includes("음주")) keyword = "음주 습관";
-else if(newsInput.includes("혈당")) keyword = "혈당 쇼크";
-else if(newsInput.length > 2) keyword = newsInput.substring(0, 5);
-const randomRule = RULES[Math.floor(Math.random() * RULES.length)];
-document.getElementById('ragTag').innerText = 📖 적용된 마케팅 공식: ${randomRule.book};
-currentSlides = randomRule.make(keyword);
-currentIdx = 0;
-document.querySelectorAll('.slide-tab').forEach((t, i) => {
-if(i === 0) t.classList.add('active');
-else t.classList.remove('active');
-});
-draw();
-alert("✅ AI 엔진이 기사를 정밀 요약하여 5단계 캐러셀 매거진을 새롭게 렌더링했습니다!");
-});
-document.getElementById('btnDown').addEventListener('click', () => {
-const canvas = document.getElementById('cardCanvas');
-const image = canvas.toDataURL("image/png");
-const link = document.createElement('a');
-link.download = magazine_slide_0${currentIdx + 1}.png;
-link.href = image;
-link.click();
-});
-document.getElementById('btnCopy').addEventListener('click', () => {
-const captionBox = document.getElementById('captionBox');
-navigator.clipboard.writeText(captionBox.innerText).then(() => {
-alert("📋 인스타그램 캡션이 클립보드에 안전하게 복사되었습니다.");
-});
-});
-setTimeout(draw, 300);
-});
+        ctx.fillText(`▪ ${cur.badge}`, startX, startY - 140);
+      } else {
+        ctx.fillText(`${cur.badge}`, startX, startY - 140);
+      }
+    }
+
+    ctx.font = `800 ${fontSize}px Pretendard, sans-serif`;
+    ctx.textBaseline = "top";
+    const lines = cur.title.split('\n');
+    let currentY = startY - 60;
+
+    lines.forEach((line) => {
+      const highlightKeywords = ["절대 금지", "치솟는 이유", "충격적인", "멈춰야 할", "핵심 팩트", "정체는"];
+      let hasKeyword = false;
+      let targetWord = "";
+      highlightKeywords.forEach(word => {
+        if(line.includes(word)) {
+          hasKeyword = true;
+          targetWord = word;
+        }
+      });
+
+      if (hasKeyword && textAlign === 'left') {
+        const parts = line.split(targetWord);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(parts[0], startX, currentY);
+        let firstWidth = ctx.measureText(parts[0]).width;
+        ctx.fillStyle = "#facc15";
+        ctx.fillText(targetWord, startX + firstWidth, currentY);
+        let secondWidth = ctx.measureText(targetWord).width;
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(parts[1] || "", startX + firstWidth + secondWidth, currentY);
+      } else {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(line, startX, currentY);
+      }
+      currentY += fontSize + 24;
+    });
+
+    if (cur.sub) {
+      ctx.font = "500 30px Pretendard, sans-serif";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
+      ctx.fillText(cur.sub, startX, currentY + 30);
+    }
+    updateCaption();
+  }
+
+  function updateCaption() {
+    const captionBox = document.getElementById('captionBox');
+    if (!captionBox) return;
+    let text = `🚨 인스타그램 필수 저장! 화제의 최신 연구 소식 요약\n\n`;
+    currentSlides.forEach((slide, idx) => {
+      text += `${idx + 1}️⃣ [${slide.badge}] ${slide.title.replace('\n', ' ')}\n👉 ${slide.sub}\n\n`;
+    });
+    text += `-\n#카드뉴스 #인스타마케팅 #지식창업 #건강정보 #자동화툴 #스튜디오PRO`;
+    captionBox.innerText = text;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('.slide-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.slide-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        currentIdx = parseInt(e.target.getAttribute('data-idx'));
+        draw();
+      });
+    });
+
+    const fontSlider = document.getElementById('fontSlider');
+    const fontSizeDisplay = document.getElementById('fontSizeDisplay');
+    fontSlider.addEventListener('input', (e) => {
+      fontSize = parseInt(e.target.value);
+      fontSizeDisplay.innerText = fontSize + "px";
+      draw();
+    });
+
+    document.querySelectorAll('#posGroup .seg-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('#posGroup .seg-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        textPos = e.target.getAttribute('data-pos');
+        draw();
+      });
+    });
+
+    document.querySelectorAll('#alignGroup .seg-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('#alignGroup .seg-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        textAlign = e.target.getAttribute('data-align');
+        draw();
+      });
+    });
+
+    document.getElementById('btnRun').addEventListener('click', () => {
+      const newsInput = document.getElementById('newsInput').value;
+      let keyword = "음주 위험";
+      if(newsInput.includes("음주")) keyword = "음주 습관";
+      else if(newsInput.includes("혈당")) keyword = "혈당 쇼크";
+      else if(newsInput.length > 2) keyword = newsInput.substring(0, 5);
+
+      const randomRule = RULES[Math.floor(Math.random() * RULES.length)];
+      document.getElementById('ragTag').innerText = `📖 적용된 마케팅 공식: ${randomRule.book}`;
+      currentSlides = randomRule.make(keyword);
+      currentIdx = 0;
+      document.querySelectorAll('.slide-tab').forEach((t, i) => {
+        if(i === 0) t.classList.add('active');
+        else t.classList.remove('active');
+      });
+      draw();
+      alert("✅ AI 엔진이 기사를 정밀 요약하여 5단계 캐러셀 매거진을 새롭게 렌더링했습니다!");
+    });
+
+    document.getElementById('btnDown').addEventListener('click', () => {
+      const canvas = document.getElementById('cardCanvas');
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement('a');
+      link.download = `magazine_slide_0${currentIdx + 1}.png`;
+      link.href = image;
+      link.click();
+    });
+
+    document.getElementById('btnCopy').addEventListener('click', () => {
+      const captionBox = document.getElementById('captionBox');
+      navigator.clipboard.writeText(captionBox.innerText).then(() => {
+        alert("📋 인스타그램 캡션이 클립보드에 안전하게 복사되었습니다.");
+      });
+    });
+
+    setTimeout(draw, 100);
+  });
+</script>
+</body>
+</html>
